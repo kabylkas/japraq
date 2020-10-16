@@ -7,5 +7,9 @@ enum class feature_t {
     CATEGORICAL
 };
 
-using row_t = std::vector<int>;
+struct row_t {
+    std::vector<int> feature_vals;
+    int label;
+};
+
 using row_ptrs_t = std::set<row_t*>;

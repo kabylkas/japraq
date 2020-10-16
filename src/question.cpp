@@ -2,8 +2,8 @@
 
 bool question::eval(const row_t& row) const {
     if (this->type == feature_t::NUMERIC) {
-        return row[this->feature] >= this->val;
+        return row.feature_vals[this->feature] >= this->val;
     } else {
-        return row[this->feature] == this->val;
+        return row.feature_vals[this->feature] == this->val;
     }
 }
