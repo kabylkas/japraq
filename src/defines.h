@@ -1,10 +1,17 @@
 #pragma once
 #include <vector>
 #include <set>
+#include <string>
 
 enum class feature_t {
     NUMERIC,
-    CATEGORICAL
+    CATEGORICAL,
+    LABEL
+};
+
+struct feature_meta_t {
+    feature_t type;
+    std::string name;
 };
 
 struct row_t {
