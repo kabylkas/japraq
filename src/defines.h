@@ -12,6 +12,7 @@ enum class feature_t {
 struct feature_meta_t {
     feature_t type;
     std::string name;
+    feature_meta_t() {}
     feature_meta_t(std::string str_type, std::string name) :
         type(get_type(str_type)), name(name) {}
     feature_meta_t(feature_t type, std::string name) :
