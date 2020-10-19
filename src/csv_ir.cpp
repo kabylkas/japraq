@@ -30,14 +30,35 @@ csv_ir::csv_ir(std::string csv_file_path) {
     while (in_csv.good()) {
         std::getline(in_csv, line);
         std::stringstream col_ss(line);
+        row_t* new_row = new row_t();
+        this->rows.insert(new_row);
         for (uint32_t i=0; std::getline(col_ss, value, ';'); ++i) {
-            std::stringstream feat_ss(value);
-            if (this->feature_meta_data[i].type == feature_t::CATEGORICAL) {
-                this->int_to_categ[i];
-                auto& categs = int_to_categ[i];
-                if (this->int_to_categ[i].find())
+            switch (this->feature_meta_data[i].type)
+            {
+                case feature_t::LABEL: {
+                    uint32_t encoding = this->find_encoding(i, value);
+                    new_row->label = encoding;
+                    break;
+                }
+                case feature_t::CATEGORICAL: {
+                    uint32_t encoding = this->find_encoding(i, value);
+                    new_row->feature_vals.push_back(encoding);
+                    break;
+                }
+                case feature_t::NUMERIC:
+                    new_row->feature_vals.push_back(std::stoi(value));
+                    break;
+                default:
+                    throw std::runtime_error("Non-existant feature category");
+                    break;
             }
         }
+    }
+}
+
+csv_ir::~csv_ir() {
+    for (auto row : rows) {
+        delete row;
     }
 }
 
@@ -46,5 +67,35 @@ std::string csv_ir::get_cols() {
     for (auto [num, feat] : this->feature_meta_data) {
         ss << num << " -> [" << feat.name << "]\n";
     }
+    ss << '\n';
+
+    for (auto [num, encodings] : this->int_to_categ) {
+        ss << num << ":\n";
+        for (auto [num2, categ_name] : encodings) {
+            ss << "  " << num2 << " -> " << categ_name << '\n';
+        }
+    }
+
     return ss.str();
+}
+
+int csv_ir::find_encoding(uint32_t col, std::string value) {
+    this->int_to_categ[col];
+    auto& categs = int_to_categ[col];
+    int found_encoding = -1;
+    for (auto [encoding, category] : categs) {
+        if (category == value) {
+            found_encoding = encoding;
+            break;
+        }
+    }
+
+    if (found_encoding >= 0) {
+        return found_encoding;
+    } else {
+        uint32_t size = categs.size();
+        categs[size];
+        categs[size] = value;
+        return size;
+    }
 }

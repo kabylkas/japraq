@@ -32,4 +32,5 @@ int main() {
     std::cout << tn2.get_gini() << '\n';
     
     csv_ir ir("../data/toy.csv");
+    std::cout << ir.get_cols();
 }
