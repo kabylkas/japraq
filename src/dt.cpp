@@ -3,6 +3,7 @@
 #include "tree_node.h"
 #include "question.h"
 #include "defines.h"
+#include "csv_ir.h"
 
 int main() {
     row_t r1, r2, r3, r4, r5;
@@ -30,4 +31,5 @@ int main() {
     tn2.print_rows();
     std::cout << tn2.get_gini() << '\n';
     
+    csv_ir ir("../data/toy.csv");
 }

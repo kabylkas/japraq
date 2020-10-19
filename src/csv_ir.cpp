@@ -16,12 +16,13 @@ csv_ir::csv_ir(std::string csv_file_path) {
         std::getline(in_csv, line);
         std::stringstream col_ss(line);
         for (uint32_t i=0; std::getline(col_ss, value, ';'); ++i) {
-            this->feature_meta_data[i];
             std::stringstream feat_ss(value);
             std::string col_name, col_category;
             std::getline(feat_ss, col_name, ':');
             std::getline(feat_ss, col_category, ':');
-            std::cout << col_name << " " << col_category << '\n';
+
+            this->feature_meta_data[i];
+            this->feature_meta_data[i] = feature_meta_t(col_category, col_name);
         }
     }
 }
