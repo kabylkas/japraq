@@ -2,6 +2,7 @@
 #include <set>
 #include <utility> 
 #include <map> 
+#include <memory>
 #include "defines.h"
 #include "question.h"
 
@@ -11,6 +12,8 @@ class tree_node {
         const row_ptrs_t& rows;
         const double gini;
         double gini_calc();
+        std::shared_ptr<tree_node> left_node;
+        std::shared_ptr<tree_node> right_node;
 
     public:
         tree_node(const row_ptrs_t& rows);
