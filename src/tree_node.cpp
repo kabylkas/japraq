@@ -2,7 +2,7 @@
 #include <iostream>
 #include <map>
 
-tree_node::tree_node(row_ptrs_t rows) : 
+tree_node::tree_node(const row_ptrs_t& rows) : 
     rows(rows), 
     gini(gini_calc()) {}
 

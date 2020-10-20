@@ -8,12 +8,12 @@
 class tree_node {
     private:
         std::map<int, std::set<int>> unique_feature_vals;
-        const row_ptrs_t rows;
+        const row_ptrs_t& rows;
         const double gini;
         double gini_calc();
 
     public:
-        tree_node(row_ptrs_t rows);
+        tree_node(const row_ptrs_t& rows);
         std::pair<row_ptrs_t, row_ptrs_t> partition(const question& q);
         void print_rows();
         double get_gini();
