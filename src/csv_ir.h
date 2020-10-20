@@ -6,7 +6,6 @@
 class csv_ir {
     public:
         csv_ir(std::string csv_file_path);
-        ~csv_ir();
         std::string get_cols();
         const row_ptrs_t& get_rows() const;
 

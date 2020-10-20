@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <memory>
 
 csv_ir::csv_ir(std::string csv_file_path) {
     std::ifstream in_csv(csv_file_path);
@@ -30,7 +31,7 @@ csv_ir::csv_ir(std::string csv_file_path) {
     while (in_csv.good()) {
         std::getline(in_csv, line);
         std::stringstream col_ss(line);
-        row_t* new_row = new row_t();
+        auto new_row = std::make_shared<row_t>();
         this->rows.insert(new_row);
         for (uint32_t i=0; std::getline(col_ss, value, ';'); ++i) {
             switch (this->feature_meta_data[i].type)
@@ -46,19 +47,13 @@ csv_ir::csv_ir(std::string csv_file_path) {
                     break;
                 }
                 case feature_t::NUMERIC:
-                    new_row->feature_vals.push_back(std::stoi(value));
+                    new_row->feature_vals.push_back(std::stod(value));
                     break;
                 default:
                     throw std::runtime_error("Non-existant feature category");
                     break;
             }
         }
-    }
-}
-
-csv_ir::~csv_ir() {
-    for (auto row : rows) {
-        delete row;
     }
 }
 

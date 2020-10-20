@@ -2,6 +2,7 @@
 #include <vector>
 #include <set>
 #include <string>
+#include <memory>
 
 enum class feature_t {
     NUMERIC,
@@ -33,8 +34,8 @@ struct feature_meta_t {
 };
 
 struct row_t {
-    std::vector<int> feature_vals;
+    std::vector<double> feature_vals;
     int label;
 };
 
-using row_ptrs_t = std::set<row_t*>;
+using row_ptrs_t = std::set<std::shared_ptr<row_t>>;
