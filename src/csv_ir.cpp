@@ -99,3 +99,7 @@ int csv_ir::find_encoding(uint32_t col, std::string value) {
         return size;
     }
 }
+
+const row_ptrs_t& csv_ir::get_rows() const {
+    return this->rows;
+}
