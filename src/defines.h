@@ -19,6 +19,7 @@ struct feature_meta_t {
         type(type), name(name) {}
 
     feature_t get_type(std::string str_type) {
+        str_type = str_type.substr(0, 3);
         if (str_type == "cat") {
             return feature_t::CATEGORICAL;
         }
