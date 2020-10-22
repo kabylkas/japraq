@@ -7,13 +7,19 @@
 
 int main() {
     row_t r1, r2, r3, r4, r5;
-    r1 = {{1,1,1,1,1}, 1};
+    r1 = {{1.0,1.1,1,1,1}, 1};
     r2 = {{2,2,2,2,2}, 0};
     r3 = {{1,2,1,4,1}, 1};
     r4 = {{2,2,1,4,1}, 2};
     r5 = {{1,2,1,1,1}, 0};
 
-    const row_ptrs_t rows = {&r1, &r2, &r3, &r4, &r5};
+    const row_ptrs_t rows = {
+        std::make_shared<row_t>(r1),
+        std::make_shared<row_t>(r2),
+        std::make_shared<row_t>(r3),
+        std::make_shared<row_t>(r4),
+        std::make_shared<row_t>(r5),
+    };
     tree_node tn = tree_node(rows);
     tn.print_rows();
     std::cout << '\n';
@@ -31,6 +37,9 @@ int main() {
     tn2.print_rows();
     std::cout << tn2.get_gini() << '\n';
     
-    csv_ir ir("../data/toy.csv");
+    csv_ir ir("../data/toy_2.csv");
     std::cout << ir.get_cols();
+
+    tree_node tn3 = tree_node(ir.get_rows());
+    std::cout << tn3.get_gini() << '\n';
 }

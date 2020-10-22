@@ -31,7 +31,7 @@ csv_ir::csv_ir(std::string csv_file_path) {
     while (in_csv.good()) {
         std::getline(in_csv, line);
         std::stringstream col_ss(line);
-        auto new_row = std::make_shared<row_t>();
+        std::shared_ptr new_row = std::make_shared<row_t>();
         this->rows.insert(new_row);
         for (uint32_t i=0; std::getline(col_ss, value, ';'); ++i) {
             switch (this->feature_meta_data[i].type)
@@ -46,9 +46,13 @@ csv_ir::csv_ir(std::string csv_file_path) {
                     new_row->feature_vals.push_back(encoding);
                     break;
                 }
-                case feature_t::NUMERIC:
-                    new_row->feature_vals.push_back(std::stod(value));
+                case feature_t::NUMERIC: {
+                    double d = std::stod(value);
+                    this->unique_nums[i];
+                    this->unique_nums[i].insert(d);
+                    new_row->feature_vals.push_back(d);
                     break;
+                }
                 default:
                     throw std::runtime_error("Non-existant feature category");
                     break;
@@ -76,7 +80,7 @@ std::string csv_ir::get_cols() {
 
 int csv_ir::find_encoding(uint32_t col, std::string value) {
     this->int_to_categ[col];
-    auto& categs = int_to_categ[col];
+    auto& categs = this->int_to_categ[col];
     int found_encoding = -1;
     for (auto [encoding, category] : categs) {
         if (category == value) {

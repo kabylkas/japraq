@@ -12,6 +12,7 @@ class csv_ir {
     private:
         std::map<uint32_t, feature_meta_t> feature_meta_data;
         std::map<uint32_t, std::map<uint32_t, std::string>> int_to_categ; 
+        std::map<uint32_t, std::set<double>> unique_nums;
         row_ptrs_t rows;
         int find_encoding(uint32_t col, std::string value);
 
