@@ -107,33 +107,45 @@ void partition_test() {
     r4 = {{2,2,1,4,1}, 2};
     r5 = {{1,2,1,1,1}, 0};
 
-    const row_ptrs_t rows = {
-        std::make_shared<row_t>(r1),
-        std::make_shared<row_t>(r2),
-        std::make_shared<row_t>(r3),
-        std::make_shared<row_t>(r4),
-        std::make_shared<row_t>(r5),
-    };
+    std::shared_ptr r1_p = std::make_shared<row_t>(r1);
+    std::shared_ptr r2_p = std::make_shared<row_t>(r2);
+    std::shared_ptr r3_p = std::make_shared<row_t>(r3);
+    std::shared_ptr r4_p = std::make_shared<row_t>(r4);
+    std::shared_ptr r5_p = std::make_shared<row_t>(r5);
+    const row_ptrs_t rows = {r1_p, r2_p, r3_p, r4_p, r5_p}; 
     tree_node tn = tree_node(rows);
 
     {
         question q = question(4, 1.5, feature_t::NUMERIC);
         auto [rows1, rows2] = tn.partition(q);
-        const row_ptrs_t expected_rows1 = {
-            std::make_shared<row_t>(r1),
-            std::make_shared<row_t>(r2)
-        };
-        std::cerr << rows1 << std::endl;
-        std::cerr << expected_rows1 << std::endl;
-
-        const row_ptrs_t expected_rows2 = {
-            std::make_shared<row_t>(r3),
-            std::make_shared<row_t>(r4),
-            std::make_shared<row_t>(r5)
-        };
-
+        const row_ptrs_t expected_rows1 = {r1_p, r2_p};
+        const row_ptrs_t expected_rows2 = {r3_p, r4_p, r5_p};
         MUST_BE_EQUAL(rows1, expected_rows1);
-        MUST_BE_EQUAL(rows2, expected_rows1);
+        MUST_BE_EQUAL(rows2, expected_rows2);
+    }
+    {
+        question q = question(0, 1, feature_t::CATEGORICAL);
+        auto [rows1, rows2] = tn.partition(q);
+        const row_ptrs_t expected_rows1 = {r1_p, r3_p, r5_p};
+        const row_ptrs_t expected_rows2 = {r2_p, r4_p};
+        MUST_BE_EQUAL(rows1, expected_rows1);
+        MUST_BE_EQUAL(rows2, expected_rows2);
+    }
+    {
+        question q = question(0, 2, feature_t::CATEGORICAL);
+        auto [rows1, rows2] = tn.partition(q);
+        const row_ptrs_t expected_rows1 = {r2_p, r4_p};
+        const row_ptrs_t expected_rows2 = {r1_p, r3_p, r5_p};
+        MUST_BE_EQUAL(rows1, expected_rows1);
+        MUST_BE_EQUAL(rows2, expected_rows2);
+    }
+    {
+        question q = question(2, 2, feature_t::CATEGORICAL);
+        auto [rows1, rows2] = tn.partition(q);
+        const row_ptrs_t expected_rows1 = {r2_p};
+        const row_ptrs_t expected_rows2 = {r1_p, r3_p, r4_p, r5_p};
+        MUST_BE_EQUAL(rows1, expected_rows1);
+        MUST_BE_EQUAL(rows2, expected_rows2);
     }
 }
 
