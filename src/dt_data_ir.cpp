@@ -1,11 +1,11 @@
-#include "csv_ir.h"
+#include "dt_data_ir.h"
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <memory>
 
-csv_ir::csv_ir(std::string csv_file_path) {
+dt_data_ir::dt_data_ir(std::string csv_file_path) {
     std::ifstream in_csv(csv_file_path);
     if (!in_csv.is_open()) {
         throw std::runtime_error("Failed to open the file");
@@ -33,23 +33,23 @@ csv_ir::csv_ir(std::string csv_file_path) {
         std::stringstream col_ss(line);
         std::shared_ptr new_row = std::make_shared<row_t>();
         this->rows.insert(new_row);
-        for (uint32_t i=0; std::getline(col_ss, value, ';'); ++i) {
-            switch (this->feature_meta_data[i].type)
+        for (col_t col=0; std::getline(col_ss, value, ';'); ++col) {
+            switch (this->feature_meta_data[col].type)
             {
                 case feature_t::LABEL: {
-                    uint32_t encoding = this->find_encoding(i, value);
+                    uint32_t encoding = this->find_encoding(col, value);
                     new_row->label = encoding;
                     break;
                 }
                 case feature_t::CATEGORICAL: {
-                    uint32_t encoding = this->find_encoding(i, value);
+                    uint32_t encoding = this->find_encoding(col, value);
                     new_row->feature_vals.push_back(encoding);
                     break;
                 }
                 case feature_t::NUMERIC: {
                     double d = std::stod(value);
-                    this->unique_nums[i];
-                    this->unique_nums[i].insert(d);
+                    this->unique_nums[col];
+                    this->unique_nums[col].insert(d);
                     new_row->feature_vals.push_back(d);
                     break;
                 }
@@ -61,14 +61,14 @@ csv_ir::csv_ir(std::string csv_file_path) {
     }
 }
 
-std::string csv_ir::get_cols() {
+std::string dt_data_ir::get_cols() {
     std::stringstream ss;
     for (auto [num, feat] : this->feature_meta_data) {
         ss << num << " -> [" << feat.name << "]\n";
     }
     ss << '\n';
 
-    for (auto [num, encodings] : this->int_to_categ) {
+    for (auto [num, encodings] : this->col_to_categ) {
         ss << num << ":\n";
         for (auto [num2, categ_name] : encodings) {
             ss << "  " << num2 << " -> " << categ_name << '\n';
@@ -78,9 +78,9 @@ std::string csv_ir::get_cols() {
     return ss.str();
 }
 
-int csv_ir::find_encoding(uint32_t col, std::string value) {
-    this->int_to_categ[col];
-    auto& categs = this->int_to_categ[col];
+int dt_data_ir::find_encoding(uint32_t col, std::string value) {
+    this->col_to_categ[col];
+    auto& categs = this->col_to_categ[col];
     int found_encoding = -1;
     for (auto [encoding, category] : categs) {
         if (category == value) {
@@ -99,6 +99,10 @@ int csv_ir::find_encoding(uint32_t col, std::string value) {
     }
 }
 
-const row_ptrs_t& csv_ir::get_rows() const {
+const row_ptrs_t& dt_data_ir::get_rows() const {
     return this->rows;
+}
+
+const feature_meta_t& dt_data_ir::get_feature_meta_data(col_t col) const {
+    return this->feature_meta_data.at(col);
 }

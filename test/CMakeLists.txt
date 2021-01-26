@@ -11,13 +11,13 @@ set (SRC_H
   ${SRC_DIR}/defines.h
   ${SRC_DIR}/question.h
   ${SRC_DIR}/tree_node.h
-  ${SRC_DIR}/csv_ir.h
+  ${SRC_DIR}/dt_data_ir.h
 )
 
 set (SRC_CPP
   ${SRC_DIR}/question.cpp
   ${SRC_DIR}/tree_node.cpp
-  ${SRC_DIR}/csv_ir.cpp
+  ${SRC_DIR}/dt_data_ir.cpp
 )
 
 set (TEST_H

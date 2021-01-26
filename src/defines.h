@@ -39,3 +39,4 @@ struct row_t {
 };
 
 using row_ptrs_t = std::set<std::shared_ptr<row_t>>;
+using col_t = uint32_t;
