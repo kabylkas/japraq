@@ -11,7 +11,6 @@ void basic_test() {
     tree_node tn = tree_node(ir, ir.get_rows());
     tn.print_rows();
 
-    question q = question(1, 16, feature_t::NUMERIC);
     auto [rows_1, rows_2] = tn.best_partition();
 
     tree_node tn_1 = tree_node(ir, rows_1);
