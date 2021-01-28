@@ -8,3 +8,8 @@ bool question::eval(const row_t& row) const {
     }
 }
 
+void question::print() const {
+    std::cout << "Feature: " << this->feature;
+    std::cout << "; Value: " << this->val;
+    std::cout << "\n";
+}

@@ -1,5 +1,5 @@
 #pragma once
-#include <cstdint>
+#include <iostream>
 #include "defines.h"
 
 class question {
@@ -13,4 +13,5 @@ class question {
             feature(feature), val(val), type(type) {}
 
         bool eval(const row_t& row) const;
+        void print() const;
 };

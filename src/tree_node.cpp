@@ -75,7 +75,8 @@ std::pair<row_ptrs_t, row_ptrs_t> tree_node::best_partition() {
             double gini2 = this->gini_calc(row2);
             double row_num = this->rows.size()/1.0;
             double ave = ((row1.size()/1.0)/row_num*gini1) + ((row2.size()/1.0)/row_num*gini2);
-            if (this->gini - ave > best_gain) {
+            double info_gain = this->gini - ave;
+            if (info_gain > best_gain) {
                 best_1 = row1;
                 best_2 = row2;
                 best_gain = this->gini - ave;

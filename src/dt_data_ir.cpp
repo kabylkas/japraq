@@ -28,10 +28,13 @@ dt_data_ir::dt_data_ir(std::string csv_file_path) {
     }
 
     // read the data
+    uint32_t row_num = 0;
     while (in_csv.good()) {
         std::getline(in_csv, line);
         std::stringstream col_ss(line);
         std::shared_ptr new_row = std::make_shared<row_t>();
+        new_row->row_num = row_num;
+        ++row_num;
         this->rows.insert(new_row);
         for (col_t col=0; std::getline(col_ss, value, ';'); ++col) {
             switch (this->feature_meta_data[col].type)

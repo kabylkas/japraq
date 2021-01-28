@@ -3,7 +3,7 @@
 #include <string>
 #include <sstream>
 
-#define VERBOSE 0
+#define VERBOSE 1
 
 class test_runner {
     private:
@@ -24,6 +24,7 @@ class test_runner {
         void run(F func, std::string id) {
             try
             {
+                std::cerr << "starting " << id << "... ";
                 func();
                 std::cerr << id << " passed" << std::endl;
             }
@@ -60,3 +61,4 @@ void assert_equal(T a, T b, int line) {
 
 #define RUN_TEST(tr, function) (tr.run(function, #function))
 #define MUST_BE_EQUAL(a, b) (assert_equal(a, b, __LINE__))
+#define ROUND_DOUBLE(n) ((uint32_t)(n*100000))
