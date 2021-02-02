@@ -12,12 +12,14 @@ set (SRC_H
   ${SRC_DIR}/question.h
   ${SRC_DIR}/tree_node.h
   ${SRC_DIR}/dt_data_ir.h
+  ${SRC_DIR}/dt.h
 )
 
 set (SRC_CPP
   ${SRC_DIR}/question.cpp
   ${SRC_DIR}/tree_node.cpp
   ${SRC_DIR}/dt_data_ir.cpp
+  ${SRC_DIR}/dt.cpp
 )
 
 set (TEST_H
