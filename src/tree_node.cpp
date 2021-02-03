@@ -5,7 +5,10 @@
 tree_node::tree_node(const dt_data_ir& data, const row_ptrs_t& rows) : 
     data(data),
     rows(rows), 
-    gini(gini_calc(rows)) {}
+    gini(gini_calc(rows)) 
+{
+    std::cout << "in tree_node ctor\n";
+}
 
 double tree_node::gini_calc(const row_ptrs_t& rows) {
     std::vector<int> labels;
@@ -90,3 +93,4 @@ std::pair<row_ptrs_t, row_ptrs_t> tree_node::best_partition() {
 double tree_node::get_gini() {
     return this->gini;
 }
+
