@@ -2,6 +2,7 @@
  * Copyright (c) 2021 Kabylkas Labs.
  * Licensed under the Apache License, Version 2.0.
  */
+
 #ifndef NUMERICAL_TABLE_COLUMN_H_
 #define NUMERICAL_TABLE_COLUMN_H_
 
@@ -25,7 +26,6 @@ namespace japraq
     private:
         std::vector<float> float_values_;
     };
-
 } // namespace japraq
 
 #endif // NUMERICAL_TABLE_COLUMN_H_
