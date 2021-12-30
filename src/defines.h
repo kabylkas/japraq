@@ -5,12 +5,6 @@
 #include <string>
 #include <memory>
 
-enum class feature_t {
-    NUMERIC,
-    CATEGORICAL,
-    LABEL
-};
-
 struct feature_meta_t {
     feature_t type;
     std::string name;
@@ -33,12 +27,3 @@ struct feature_meta_t {
         }
     }
 };
-
-struct row_t {
-    std::vector<double> feature_vals;
-    int label;
-    uint32_t row_num;
-};
-
-using row_ptrs_t = std::set<std::shared_ptr<row_t>>;
-using col_t = uint32_t;
