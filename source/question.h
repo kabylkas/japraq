@@ -1,18 +1,34 @@
-#pragma once
+/*
+ * Copyright (c) 2021 Kabylkas Labs.
+ * Licensed under the Apache License, Version 2.0.
+ */
+#ifndef QUESTION_H_
+#define QUESTION_H_
 
-#include <iostream>
-#include "defines.h"
-
-class question {
-    private:
-        const uint32_t feature;
-        const double val;
-        const feature_t type;
-
+namespace japraq
+{
+    class Question {
     public:
-        question(uint32_t feature, double val, feature_t type) :
-            feature(feature), val(val), type(type) {}
+        Question() = default;
+        void SetRightOperand(float right_operand);
+        float GetRightOperand() const;
+        virtual bool Evaluate(float left_operatnd) = 0;
 
-        bool eval(const row_t& row) const;
-        void print() const;
-};
+    private:
+        float right_operand_ = 0.0;
+    };
+
+    class QuestionEqualsTo : public Question
+    {
+    public:
+        bool Evaluate(float left_operand) override;
+    };
+
+    class QuestionGreaterThanOrEqualsTo : public Question
+    {
+    public:
+        bool Evaluate(float left_opearand) override;
+    };
+} // namespace japraq
+
+#endif // QUESTION_H_

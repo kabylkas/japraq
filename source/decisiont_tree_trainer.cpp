@@ -88,7 +88,7 @@ namespace japraq
     }
     // STATIC FUNCTIONS - END.
 
-    bool DecisionTreeTrainer::Train(const std::string& input_csv_file, const std::string& output_model_file, std::string& error_message)
+    bool DecisionTreeTrainer::Train(const std::shared_ptr<IDecisionTreeAlgorithm>& algorithm, const std::string& input_csv_file, const std::string& output_model_file, std::string& error_message)
     {
 
     }
