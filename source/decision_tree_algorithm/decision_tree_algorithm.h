@@ -18,7 +18,7 @@ namespace japraq
     class IDecisionTreeAlgorithm
     {
         // Providing rows to partition exposes internal represntation of the data. I should hide this.
-        virtual bool Partition(const DecisionTreeDataset& dataset, DecisionTreeNode& root_node, std::string& error_message) = 0;
+        virtual bool BuildTree(const DecisionTreeDataset& dataset, DecisionTreeNode& root_node, std::string& error_message) = 0;
     };
 } // namespace japraq
 

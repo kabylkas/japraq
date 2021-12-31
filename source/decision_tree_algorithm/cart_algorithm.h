@@ -16,7 +16,7 @@ namespace japraq
     class CartAlgorighm : public IDecisionTreeAlgorithm
     {
     public:
-        bool Partition(const DecisionTreeDataset& dataset, DecisionTreeNode& root_node, std::string& error_message) override;
+        bool BuildTree(const DecisionTreeDataset& dataset, DecisionTreeNode& root_node, std::string& error_message) override;
     };
 } // namespace japraq
 
