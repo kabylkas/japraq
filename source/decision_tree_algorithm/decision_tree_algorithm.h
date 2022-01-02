@@ -14,11 +14,13 @@ namespace japraq
     // Forward declation.
     class DecisionTreeDataset;
     class DecisionTreeNode;
+    struct DataPoint;
 
     class IDecisionTreeAlgorithm
     {
-        // Providing rows to partition exposes internal represntation of the data. I should hide this.
         virtual bool BuildTree(const DecisionTreeDataset& dataset, DecisionTreeNode& root_node, std::string& error_message) = 0;
+        virtual bool Infer(const DecisionTreeDataset& dataset, const DecisionTreeNode& root_node, const DataPoint& data_point, std::string& result, std::string& error_message);
+        virtual ~IDecisionTreeAlgorithm() = 0;
     };
 } // namespace japraq
 

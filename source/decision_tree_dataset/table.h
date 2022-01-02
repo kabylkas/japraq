@@ -12,6 +12,11 @@
 
 namespace japraq
 {
+    struct TableEntry
+    {
+        
+    };
+
     class Table
     {
     public:

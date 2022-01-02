@@ -1,6 +1,33 @@
-#include "tree_node.h"
-#include <iostream>
-#include <map>
+/*
+ * Copyright (c) 2021 Kabylkas Labs.
+ * Licensed under the Apache License, Version 2.0.
+ */
+#include "decision_tree_node.h"
+
+// Local libraries.
+#include "question.h"
+
+namespace japraq
+{
+    struct DecisionTreeNode::DecisionTreeNodeImplementation
+    {
+        std::shared_ptr<DecisionTreeNode> true_child;
+        std::shared_ptr<DecisionTreeNode> false_child;
+        std::vector<uint32_t> dataset_indicies;
+    };
+
+    DecisionTreeNode::DecisionTreeNode()
+        : pimpl_(std::make_unique<DecisionTreeNodeImplementation>(new DecisionTreeNodeImplementation())) {}
+
+    bool DecisionTreeNode::GetDatasetIndicies(std::vector<uint32_t>& dataset_indicies_, std::string& error_message) const
+    {
+    }
+
+    bool DecisionTreeNode::IsLeaf() const
+    {
+        return (pimpl_->true_child == nullptr && pimpl_->false_child == nullptr);
+    }
+}
 
 tree_node::tree_node(const dt_data_ir& data, const row_ptrs_t& rows) : 
     data(data),
