@@ -1,1 +1,2 @@
-# Japraq: extensible C++ library for ML Decision Tree Algorithms
+# Japraq
+Extensible C++ library for ML Decision Tree Algorithms
