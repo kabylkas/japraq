@@ -18,7 +18,21 @@ namespace japraq
 
     class IDecisionTreeAlgorithm
     {
-        virtual bool BuildTree(const DecisionTreeDataset& dataset, DecisionTreeNode& root_node, std::string& error_message) = 0;
+        /* 
+         * BuildTree --
+         *  Accepts the DecisionTreeDataset and build the decision based on the
+         *  algorithm the inherting class implements.
+         * 
+         *  On successful build, the method return true and outputs a root_node.
+         *  Otherwise, returns false and outputs error message.
+         */
+        virtual bool BuildTree
+        (
+            const DecisionTreeDataset& dataset,
+            DecisionTreeNode& root_node,
+            std::string& error_message
+        ) = 0;
+
         virtual bool Infer(const DecisionTreeDataset& dataset, const DecisionTreeNode& root_node, const DataPoint& data_point, std::string& result, std::string& error_message);
         virtual ~IDecisionTreeAlgorithm() = 0;
     };
