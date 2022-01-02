@@ -8,18 +8,33 @@
 
 // C++ libraries.
 #include <map>
+#include <memory>
 #include <vector>
 #include <string>
 
 namespace japraq
-{ 
+{
+    struct RowEntry
+    {
+        std::string column_name;
+        double value;
+    };
+
+    struct TableRow
+    {
+        std::vector<RowEntry> row_entries;
+    };
+
     // Internal representation of data for decision tree.
     class DecisionTreeDataset
     {
     public:
-    
-    private:
+        uint32_t GetLabel(uint32_t row_index) const; 
+        TableRow GetRow(uint32_t row_index) const;
 
+    private:
+        class DecisionTreeDatasetImplementation;
+        std::unique_ptr<DecisionTreeDatasetImplementation> pimpl_;
     };
 } // namespace japraq
 

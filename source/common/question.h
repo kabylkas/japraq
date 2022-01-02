@@ -5,29 +5,36 @@
 #ifndef QUESTION_H_
 #define QUESTION_H_
 
+// C++ libraries.
+#include <string>
+
 namespace japraq
 {
-    class Question {
+    // Forward declarations.
+    struct TableRow;
+
+    class DecisionTreeQuestion {
     public:
-        Question() = default;
+        DecisionTreeQuestion() = default;
         void SetRightOperand(float right_operand);
         float GetRightOperand() const;
-        virtual bool Evaluate(float left_operatnd) = 0;
+        virtual bool Evaluate(const TableRow& table_row) const = 0;
 
     private:
-        float right_operand_ = 0.0;
+        std::string column_name_;
+        float column_value_ = 0.0;
     };
 
-    class QuestionEqualsTo : public Question
+    class QuestionEqualsTo : public DecisionTreeQuestion
     {
     public:
-        bool Evaluate(float left_operand) override;
+        bool Evaluate(const TableRow& table_row) const override;
     };
 
-    class QuestionGreaterThanOrEqualsTo : public Question
+    class QuestionGreaterThanOrEqualsTo : public DecisionTreeQuestion
     {
     public:
-        bool Evaluate(float left_opearand) override;
+        bool Evaluate(const TableRow& table_row) const override;
     };
 } // namespace japraq
 

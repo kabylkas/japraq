@@ -6,29 +6,70 @@
 
 // C++ libraries.
 #include <deque>
+#include <map>
 #include <memory>
 
 // Local libraries.
+#include "decision_tree_dataset.h"
 #include "decision_tree_node.h"
 #include "question.h"
 
 namespace japraq
 {
     // STATIC FUNCTIONS - BEGIN.
-    static double CalculateGini()
+    static double CalculateGiniImpurity(const DecisionTreeDataset& dataset, std::vector<uint32_t> row_indicies)
     {
+        // Create the histogram of labels for the given indicies.
+        std::map<uint32_t, uint32_t> histogram;
+        for (uint32_t index : row_indicies)
+        {
+            // Get label.
+            uint32_t label = dataset.GetLabel(index);
 
+            // Update histogram.
+            histogram[label];
+            ++histogram[label];
+        }
+
+        // Calculate gini.
+        uint32_t num_indicies = row_indicies.size();
+        double gini = 0.0;
+        for (const auto& histogram_data : histogram)
+        {
+            double probability = static_cast<double>(histogram_data.second) / num_indicies;
+            gini += probability * probability;
+        }
+
+        return (1.0 - gini);
     }
 
-    static bool Partition(const DecisionTreeDataset& dataset, const Question& question, std::vector<uint32_t>& true_indicies, std::vector<uint32_t> false_indicies, std::string& error_message)
+    static bool Partition
+    (
+        const DecisionTreeDataset& dataset,
+        const std::vector<uint32_t>& row_indicies,
+        const Question& question,
+        std::vector<uint32_t>& true_indicies,
+        std::vector<uint32_t> false_indicies,
+        std::string& error_message
+    )
     {
-
+        for (uint32_t index : row_indicies)
+        {
+            if (question.Evaluate(0.0))
+            {
+                true_indicies.push_back(index);
+            }
+            else
+            {
+                false_indicies.push_back(index);
+            }
+        }
     }
 
     static bool BestPartition
     (
         const DecisionTreeDataset& dataset,
-        const std::vector<uint32_t> node_indicies,
+        const std::vector<uint32_t> row_indicies,
         std::vector<uint32_t>& true_indicies,
         std::vector<uint32_t> false_indicies,
         std::string& error_message
