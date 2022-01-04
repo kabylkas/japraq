@@ -2,8 +2,8 @@
  * Copyright (c) 2021 Kabylkas Labs.
  * Licensed under the Apache License, Version 2.0.
  */
-#ifndef TABLE_H_
-#define TABLE_H_
+#ifndef TABLE_DEFINES_H_
+#define TABLE_DEFINES_H_
 
 // C++ libraries.
 #include <memory>
@@ -44,15 +44,10 @@ namespace japraq
         std::vector<RowEntry> row_entries;
     };
 
-    class Table
+    struct Table
     {
-    public:
-        bool ReadCSV(const std::string& input_csv_file);
-
-    private:
-        class TableImplementation;
-        std::unique_ptr<TableImplementation> table_implementation_;
+        std::vector<TableColumn> columns;
     };
 } // namespace japraq
 
-#endif // TABLE_H_
+#endif // TABLE_DEFINES_H_
