@@ -55,14 +55,7 @@ namespace japraq
     {
         for (uint32_t index : row_indicies)
         {
-            if (question.Evaluate(0.0))
-            {
-                true_indicies.push_back(index);
-            }
-            else
-            {
-                false_indicies.push_back(index);
-            }
+            const auto& row = dataset.GetRow(index);
         }
     }
 
