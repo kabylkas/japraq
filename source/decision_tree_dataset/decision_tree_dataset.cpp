@@ -20,7 +20,11 @@ namespace japraq
     static const char* kStringErrorDataColumnsDonotMatch = "Error: Failed to read CSV. Number of data columns do not match number of header columns.";
 
     // CONSTANT MAPPINGS.
-    static const std::map<std::string, ColumnType> kMapColumnTypeStringToEnum;
+    static const std::map<std::string, ColumnType> kMapColumnTypeStringToEnum = {
+        { "cat", ColumnType::kCategorical },
+        { "num", ColumnType::kNumircal },
+        { "lab", ColumnType::kCategorical }
+    };
 
     // PIMPL DEFINTION.
     struct DecisionTreeDataset::DecisionTreeDatasetImplementation
@@ -127,5 +131,4 @@ namespace japraq
         pimpl_->is_init = !should_abort;
         return !should_abort;
     }
-
 } // namespace japraq
