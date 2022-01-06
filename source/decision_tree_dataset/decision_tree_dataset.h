@@ -19,12 +19,18 @@ namespace japraq
     class DecisionTreeDataset
     {
     public:
+        bool ReadCSV(const std::string& input_csv_files, std::string& error_message);
         bool GetLabel(uint32_t row_index, std::string& label, std::string& error_message) const; 
         bool GetRow(uint32_t row_index, TableRow& table_row, std::string& error_message) const;
         bool GetColumn(const std::string& column_name, std::shared_ptr<TableColumn>& table_column, std::string& error_message) const;
 
+        // Constructor restrictions.
+        DecisionTreeDataset() = default;
+        DecisionTreeDataset(const DecisionTreeDataset&) = delete;
+        DecisionTreeDataset operator=(const DecisionTreeDataset&) = delete;
+
     private:
-        class DecisionTreeDatasetImplementation;
+        struct DecisionTreeDatasetImplementation;
         std::unique_ptr<DecisionTreeDatasetImplementation> pimpl_;
     };
 } // namespace japraq

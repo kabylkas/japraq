@@ -22,7 +22,13 @@ namespace japraq
          * On successful training returns true and generates model file in the specified location by output_model_file argument.
          * Otherwise return false and outputs corresponding message in error_message argument.
          */
-        static bool Train(const std::shared_ptr<IDecisionTreeAlgorithm>& algorithm, const std::string& input_csv_file, const std::string& output_model_file, std::string& error_message);
+        static bool Train
+        (
+            const std::shared_ptr<IDecisionTreeAlgorithm>& algorithm,
+            const std::string& input_csv_file,
+            const std::string& output_model_file,
+            std::string& error_message
+        );
 
         // Explicitly remove constructors.
         DecisionTreeTrainer() = delete;

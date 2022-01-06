@@ -19,24 +19,29 @@ namespace japraq
         kUndefined
     };
 
-    struct ColumnValue
+    struct ColumnInfo
     {
+
         ColumnType column_type = ColumnType::kUndefined;
+        std::string column_name;
+    };
+
+    struct ColumnEntry
+    {
         float numerical_value = 0.0;
         std::string categorical_value;
     };
 
     struct TableColumn
     {
-        ColumnValue GetValue(uint32_t index);
-        void AddEntry(const std::string& value);
-        std::string column_name;
+        ColumnInfo column_info;
+        std::vector<ColumnEntry> column_entries;
     };
 
     struct RowEntry
     {
-        std::string column_name;
-        double value;
+        ColumnInfo column_info;
+        ColumnEntry column_entry;
     };
 
     struct TableRow
