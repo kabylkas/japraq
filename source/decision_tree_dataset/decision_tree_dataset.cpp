@@ -6,6 +6,7 @@
 
 // C++ libraries.
 #include <fstream>
+#include <cassert>
 #include <map>
 #include <sstream>
 
@@ -29,8 +30,15 @@ namespace japraq
     // PIMPL DEFINTION.
     struct DecisionTreeDataset::DecisionTreeDatasetImplementation
     {
+        // Table that stores the data.
         Table table;
+
+        // Was table initizlized?
         bool is_init = false;
+
+        // Mappings from string categorical names to uint32_t.
+        // This was done for optimization purposes.
+        std::map<std::string, uint32_t> map_string_to_uint;
     };
 
     bool DecisionTreeDataset::ReadCSV(const std::string& input_csv_file, std::string& error_message)
@@ -98,21 +106,54 @@ namespace japraq
                 uint32_t column_num = 0;
                 for (column_num = 0; std::getline(column_stream, value, ';'); ++column_num)
                 {
+                    auto& current_column = pimpl_->table.columns[column_num];
+
+                    // Allocate new column entry.
+                    current_column.column_entries.push_back(ColumnEntry());
+                    auto& current_entry = current_column.column_entries.back();
+
                     // Sanity check: number of columns should match to number columns read
                     // in first line.
                     if (column_num < pimpl_->table.columns.size())
                     {
-                        switch (pimpl_->table.columns[column_num].column_info.column_type)
+                        switch (current_column.column_info.column_type)
                         {
                             case ColumnType::kCategorical:
                             {
+                                // Handle internal opimization of mapping.
+                                const auto& map_iterator = pimpl_->map_string_to_uint.find(value);
+                                uint32_t uint_value = 0;
+                                if (map_iterator == pimpl_->map_string_to_uint.end())
+                                {
+                                    // Allocate an entry in the map.
+                                    pimpl_->map_string_to_uint[value];
 
+                                    // Set the map to the current size.
+                                    size_t size = pimpl_->map_string_to_uint.size();
+                                    pimpl_->map_string_to_uint[value] = size;
+                                    uint_value = size;
+                                }
+                                else
+                                {
+                                    uint_value = map_iterator->second;
+                                }
+
+                                // Record the data.
+                                current_entry.categorical_value = value;
+                                current_entry.categorical_uint_value = uint_value;
                             }
                             break;
 
                             case ColumnType::kNumircal:
                             {
-
+                                try
+                                {
+                                    current_entry.numerical_value = std::stof(value);
+                                }
+                                catch (const std::exception& e)
+                                {
+                                    assert(false);
+                                }
                             }
                             break;
 

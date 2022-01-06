@@ -21,7 +21,6 @@ namespace japraq
 
     struct ColumnInfo
     {
-
         ColumnType column_type = ColumnType::kUndefined;
         std::string column_name;
     };
@@ -30,6 +29,10 @@ namespace japraq
     {
         float numerical_value = 0.0;
         std::string categorical_value;
+
+        // For optimization purposes categorical
+        // string values are converted to uint32_t.
+        uint32_t categorical_uint_value;
     };
 
     struct TableColumn
