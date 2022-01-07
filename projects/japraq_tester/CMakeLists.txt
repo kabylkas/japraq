@@ -23,9 +23,9 @@ set (ALL_CPP
 )
 
 # Adding target.
-add_executable(main main.cpp ${ALL_HEADERS} ${ALL_CPP})
+add_executable(japraq_tester main.cpp ${ALL_HEADERS} ${ALL_CPP})
 
 # Include directories.
-target_include_directories(main PRIVATE
+target_include_directories(japraq_tester PRIVATE
     ${SOURCE_DIR}/decision_tree_dataset
 )

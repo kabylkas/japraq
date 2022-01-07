@@ -1,4 +1,5 @@
 data/
-build/
+build/windows/
+build/linux/
 test/build/
 .vscode/

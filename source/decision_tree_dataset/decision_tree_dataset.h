@@ -25,7 +25,7 @@ namespace japraq
         bool GetColumn(const std::string& column_name, TableColumn& table_column, std::string& error_message) const;
 
         // Constructor restrictions.
-        DecisionTreeDataset();
+        DecisionTreeDataset() = default;
         DecisionTreeDataset(const DecisionTreeDataset&) = delete;
         DecisionTreeDataset operator=(const DecisionTreeDataset&) = delete;
 

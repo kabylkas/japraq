@@ -21,6 +21,7 @@ namespace japraq
     static const char* kStringErrorDataColumnsDonotMatch = "Error: Failed to read CSV. Number of data columns do not match number of header columns.";
     static const char* kStringErrorDatasetNotInit = "Error: Dataset not initialized.";
     static const char* kStringErrorRowIdxOutOfRange = "Error: Provided row index is out of range.";
+    static const char* kStringErrorDatasetHasManyLabels = "Error: Multiple labels detected. Ensure that the dataset has only one label column.";
 
     // CONSTANT MAPPINGS.
     static const std::map<std::string, ColumnType> kMapColumnTypeStringToEnum = {
@@ -44,17 +45,18 @@ namespace japraq
 
         // Number of rows in the table.
         uint32_t num_rows = 0;
+
+        // Is label set.
+        bool is_label_index_set = false;
     };
 
     // IMPLEMENTATION OF THE CLASS.
-    DecisionTreeDataset::DecisionTreeDataset() : pimpl_(std::make_shared<DecisionTreeDatasetImplementation>()) {}
-
     bool DecisionTreeDataset::ReadCSV(const std::string& input_csv_file, std::string& error_message)
     {
         bool should_abort = false;
 
         // Allocate pimpl.
-        pimpl_ = std::make_unique<DecisionTreeDatasetImplementation>();
+        pimpl_ = std::make_shared<DecisionTreeDatasetImplementation>();
 
         // Open the file.
         std::ifstream input_csv(input_csv_file);
@@ -91,6 +93,20 @@ namespace japraq
                 if (kMapColumnTypeStringToEnum.count(col_type) > 0)
                 {
                     column.column_info.column_type = kMapColumnTypeStringToEnum.at(col_type);
+
+                    // If label, save the index of the column.
+                    if (col_type == "lab")
+                    {
+                        if (!pimpl_->is_label_index_set)
+                        {
+                            pimpl_->table.label_column_index = pimpl_->table.columns.size() - 1;
+                        }
+                        else
+                        {
+                            should_abort = true;
+                            error_message = kStringErrorDatasetHasManyLabels;
+                        }
+                    }
                 }
                 else
                 {

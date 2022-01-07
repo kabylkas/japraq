@@ -62,6 +62,7 @@ namespace synaq
 } // namespace synaq
 
 #define RUN_TEST(tr, function) (tr.Run(function, #function))
-#define MUST_BE_EQUAL(a, b) (assert_equal(a, b, __LINE__))
+#define MUST_BE_EQUAL(a, b) (synaq::assert_equal(a, b, __LINE__))
+#define REQUIRE(a) (synaq::assert_equal(a, true, __LINE__))
 
 #endif // SYNAQ_H_
