@@ -52,7 +52,7 @@ namespace synaq
         {
             std::stringstream stream;
             stream << "Assertion failed on line " << line << ".";
-            throw std::runtime_error(ss.str());
+            throw std::runtime_error(stream.str());
         }
         else
         {

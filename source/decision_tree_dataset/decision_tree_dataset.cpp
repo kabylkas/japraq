@@ -47,6 +47,8 @@ namespace japraq
     };
 
     // IMPLEMENTATION OF THE CLASS.
+    DecisionTreeDataset::DecisionTreeDataset() : pimpl_(std::make_shared<DecisionTreeDatasetImplementation>()) {}
+
     bool DecisionTreeDataset::ReadCSV(const std::string& input_csv_file, std::string& error_message)
     {
         bool should_abort = false;

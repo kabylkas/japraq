@@ -25,14 +25,13 @@ namespace japraq
         bool GetColumn(const std::string& column_name, TableColumn& table_column, std::string& error_message) const;
 
         // Constructor restrictions.
-        DecisionTreeDataset() = default;
+        DecisionTreeDataset();
         DecisionTreeDataset(const DecisionTreeDataset&) = delete;
         DecisionTreeDataset operator=(const DecisionTreeDataset&) = delete;
 
     private:
         struct DecisionTreeDatasetImplementation;
-        std::unique_ptr<DecisionTreeDatasetImplementation> pimpl_;
+        std::shared_ptr<DecisionTreeDatasetImplementation> pimpl_;
     };
 } // namespace japraq
-
 #endif // DECISION_TREE_DATASET_H_

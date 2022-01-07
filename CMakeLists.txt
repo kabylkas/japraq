@@ -1,3 +1,5 @@
+# Copyright (c) 2021-2022 Kabylkas Labs.
+# Licensed under the Apache License, Version 2.0.
 cmake_minimum_required(VERSION 3.0)
 
 project(japraq)
