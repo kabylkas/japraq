@@ -19,6 +19,8 @@ namespace japraq
     static const char* kStringErrorFailedToOpenCsv = "Error: Failed to open a CSV file.";
     static const char* kStringErrorUnrecognizedColumnType = "Error: Failed to read CSV. File contains unrecognized column type.";
     static const char* kStringErrorDataColumnsDonotMatch = "Error: Failed to read CSV. Number of data columns do not match number of header columns.";
+    static const char* kStringErrorDatasetNotInit = "Error: Dataset not initialized.";
+    static const char* kStringErrorRowIdxOutOfRange = "Error: Provided row index is out of range.";
 
     // CONSTANT MAPPINGS.
     static const std::map<std::string, ColumnType> kMapColumnTypeStringToEnum = {
@@ -39,8 +41,12 @@ namespace japraq
         // Mappings from string categorical names to uint32_t.
         // This was done for optimization purposes.
         std::map<std::string, uint32_t> map_string_to_uint;
+
+        // Number of rows in the table.
+        uint32_t num_rows = 0;
     };
 
+    // IMPLEMENTATION OF THE CLASS.
     bool DecisionTreeDataset::ReadCSV(const std::string& input_csv_file, std::string& error_message)
     {
         bool should_abort = false;
@@ -112,8 +118,8 @@ namespace japraq
                     current_column.column_entries.push_back(ColumnEntry());
                     auto& current_entry = current_column.column_entries.back();
 
-                    // Sanity check: number of columns should match to number columns read
-                    // in first line.
+                    // Sanity check: number of columns should match to number
+                    // columns read in the first line.
                     if (column_num < pimpl_->table.columns.size())
                     {
                         switch (current_column.column_info.column_type)
@@ -167,9 +173,47 @@ namespace japraq
                         error_message = kStringErrorDataColumnsDonotMatch;
                     }
                 }
+
+                // Sanity check: number of columns should match to number
+                // columns read in the first line.
+                if (column_num != pimpl_->table.columns.size())
+                {
+                    should_abort = true;
+                    error_message = kStringErrorDataColumnsDonotMatch;
+                }
             }
         }
+
         pimpl_->is_init = !should_abort;
+        return !should_abort;
+    }
+
+    bool DecisionTreeDataset::GetLabel(uint32_t row_index, std::string& label, uint32_t& label_id, std::string& error_message) const
+    {
+        bool should_abort = false;
+
+        // Error handling.
+        if (!pimpl_->is_init)
+        {
+            should_abort = true;
+            error_message = kStringErrorDatasetNotInit;
+        }
+        else if (row_index < pimpl_->num_rows)
+        {
+            should_abort = true;
+            error_message = kStringErrorRowIdxOutOfRange;
+        }
+
+        // Get label if base checks passed.
+        if (!should_abort)
+        {
+            auto& column = pimpl_->table.columns[pimpl_->table.label_column_index];
+
+            // Pass the values back.
+            label = column.column_entries[row_index].categorical_value;
+            label_id = column.column_entries[row_index].categorical_uint_value;
+        }
+
         return !should_abort;
     }
 } // namespace japraq

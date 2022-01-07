@@ -55,7 +55,7 @@ namespace japraq
     struct Table
     {
         std::vector<TableColumn> columns;
-        uint32_t label_column = 0;
+        uint32_t label_column_index = 0;
     };
 } // namespace japraq
 
