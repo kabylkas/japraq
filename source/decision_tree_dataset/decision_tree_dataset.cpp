@@ -26,7 +26,7 @@ namespace japraq
     // CONSTANT MAPPINGS.
     static const std::map<std::string, ColumnType> kMapColumnTypeStringToEnum = {
         { "cat", ColumnType::kCategorical },
-        { "num", ColumnType::kNumircal },
+        { "num", ColumnType::kNumercal },
         { "lab", ColumnType::kCategorical }
     };
 
@@ -168,7 +168,7 @@ namespace japraq
                             }
                             break;
 
-                            case ColumnType::kNumircal:
+                            case ColumnType::kNumercal:
                             {
                                 try
                                 {

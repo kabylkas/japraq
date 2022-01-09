@@ -15,7 +15,7 @@ namespace japraq
     enum class ColumnType
     {
         kCategorical,
-        kNumircal,
+        kNumercal,
         kUndefined
     };
 

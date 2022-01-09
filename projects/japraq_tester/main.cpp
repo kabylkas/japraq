@@ -54,18 +54,36 @@ void TestDecisionTreeDataset()
     REQUIRE(row.row_entries[0].column_entry.categorical_value == "nursultan");
     REQUIRE(row.row_entries[1].column_entry.numerical_value == 31.0);
     REQUIRE(row.row_entries[2].column_entry.categorical_value == "programmer");
+    REQUIRE(row.row_entries[0].column_info.column_name == "name");
+    REQUIRE(row.row_entries[0].column_info.column_type == japraq::ColumnType::kCategorical);
+    REQUIRE(row.row_entries[1].column_info.column_name == "age");
+    REQUIRE(row.row_entries[1].column_info.column_type == japraq::ColumnType::kNumercal);
+    REQUIRE(row.row_entries[2].column_info.column_name == "occupation");
+    REQUIRE(row.row_entries[2].column_info.column_type == japraq::ColumnType::kCategorical);
 
     is_row_read = dataset.GetRow(1, row, error_message);
     REQUIRE(is_row_read);
     REQUIRE(row.row_entries[0].column_entry.categorical_value == "arai");
     REQUIRE(row.row_entries[1].column_entry.numerical_value == 29.0);
     REQUIRE(row.row_entries[2].column_entry.categorical_value == "translator");
+    REQUIRE(row.row_entries[0].column_info.column_name == "name");
+    REQUIRE(row.row_entries[0].column_info.column_type == japraq::ColumnType::kCategorical);
+    REQUIRE(row.row_entries[1].column_info.column_name == "age");
+    REQUIRE(row.row_entries[1].column_info.column_type == japraq::ColumnType::kNumercal);
+    REQUIRE(row.row_entries[2].column_info.column_name == "occupation");
+    REQUIRE(row.row_entries[2].column_info.column_type == japraq::ColumnType::kCategorical);
 
     is_row_read = dataset.GetRow(2, row, error_message);
     REQUIRE(is_row_read);
     REQUIRE(row.row_entries[0].column_entry.categorical_value == "arman");
     REQUIRE(row.row_entries[1].column_entry.numerical_value == 38.0);
     REQUIRE(row.row_entries[2].column_entry.categorical_value == "programmer");
+    REQUIRE(row.row_entries[0].column_info.column_name == "name");
+    REQUIRE(row.row_entries[0].column_info.column_type == japraq::ColumnType::kCategorical);
+    REQUIRE(row.row_entries[1].column_info.column_name == "age");
+    REQUIRE(row.row_entries[1].column_info.column_type == japraq::ColumnType::kNumercal);
+    REQUIRE(row.row_entries[2].column_info.column_name == "occupation");
+    REQUIRE(row.row_entries[2].column_info.column_type == japraq::ColumnType::kCategorical);
 }
 
 int main()
