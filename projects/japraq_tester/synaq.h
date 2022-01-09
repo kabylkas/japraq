@@ -20,21 +20,21 @@ namespace synaq
         {
             try
             {
-                std::cerr << "Starting " << id << "... ";
+                std::cerr << "Starting " << id << "..." << std::endl;
                 func();
-                std::cerr << id << " passed" << std::endl;
+                std::cerr << id << " passed." << std::endl;
             }
             catch(const std::exception& e)
             {
                 tests_failed_++;
-                std::cerr << id << " failed" << std::endl;
+                std::cerr << id << " failed." << std::endl;
             }
         }
 
         Synaq() = default;
         ~Synaq()
         {
-            if (this->tests_failed_ > 0)
+            if (tests_failed_ > 0)
             {
                 std::cerr << "Some tests failed." << std::endl;
             }
@@ -51,7 +51,7 @@ namespace synaq
         if (a != b)
         {
             std::stringstream stream;
-            stream << "Assertion failed on line " << line << ".";
+            stream << "[!] Assertion on line " << line << "failed.";
             throw std::runtime_error(stream.str());
         }
         else

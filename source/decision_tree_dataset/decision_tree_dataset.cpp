@@ -203,6 +203,7 @@ namespace japraq
         }
 
         pimpl_->is_init = !should_abort;
+        pimpl_->num_rows = pimpl_->table.columns[0].column_entries.size();
         return !should_abort;
     }
 
@@ -216,7 +217,7 @@ namespace japraq
             should_abort = true;
             error_message = kStringErrorDatasetNotInit;
         }
-        else if (row_index < pimpl_->num_rows)
+        else if (row_index >= pimpl_->num_rows)
         {
             should_abort = true;
             error_message = kStringErrorRowIdxOutOfRange;
@@ -230,6 +231,44 @@ namespace japraq
             // Pass the values back.
             label = column.column_entries[row_index].categorical_value;
             label_id = column.column_entries[row_index].categorical_uint_value;
+        }
+
+        return !should_abort;
+    }
+
+    bool DecisionTreeDataset::GetRow(uint32_t row_index, TableRow& table_row, std::string& error_message) const
+    {
+        bool should_abort = false;
+
+        // Error handling.
+        if (!pimpl_->is_init)
+        {
+            should_abort = true;
+            error_message = kStringErrorDatasetNotInit;
+        }
+        else if (row_index >= pimpl_->num_rows)
+        {
+            should_abort = true;
+            error_message = kStringErrorRowIdxOutOfRange;
+        }
+
+        // Get the row if base checks passed.
+        if (!should_abort)
+        {
+            // Clear the rows.
+            table_row.row_entries.clear();
+
+            // Traverse all the columns to get the relevant row.
+            for (const auto& column : pimpl_->table.columns)
+            {
+                // Allocate the entry.
+                table_row.row_entries.push_back(RowEntry());
+                auto& row_entry = table_row.row_entries.back();
+
+                // Save the entry from the column.
+                row_entry.column_entry = column.column_entries[row_index];
+                row_entry.column_info = column.column_info;
+            }
         }
 
         return !should_abort;
