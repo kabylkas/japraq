@@ -21,9 +21,9 @@ namespace japraq
     public:
         bool ReadCSV(const std::string& input_csv_file, std::string& error_message);
         bool ReadModel(const std::string& input_model_file, std::string& error_message);
-        bool GetLabel(uint32_t row_index, std::string& label, uint32_t& label_id, std::string& error_message) const;
-        bool GetRow(uint32_t row_index, TableRow& table_row, std::string& error_message) const;
-        bool GetColumn(const std::string& column_name, TableColumn& table_column, std::string& error_message) const;
+        bool GetLabel(const uint32_t row_index, std::string& label, uint32_t& label_id, std::string& error_message) const;
+        bool GetRow(const uint32_t row_index, TableRow& table_row, std::string& error_message) const;
+        bool GetColumn(const uint32_t column_index, TableColumn& table_column, std::string& error_message) const;
 
         // Constructor restrictions.
         DecisionTreeDataset() = default;
