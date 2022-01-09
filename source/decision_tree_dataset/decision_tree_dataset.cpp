@@ -21,7 +21,9 @@ namespace japraq
     static const char* kStringErrorDataColumnsDonotMatch = "Error: Failed to read CSV. Number of data columns do not match number of header columns.";
     static const char* kStringErrorDatasetNotInit = "Error: Dataset not initialized.";
     static const char* kStringErrorRowIdxOutOfRange = "Error: Provided row index is out of range.";
+    static const char* kStringErrorColIdxOutOfRange = "Error: Provided column index is out of range.";
     static const char* kStringErrorDatasetHasManyLabels = "Error: Multiple labels detected. Ensure that the dataset has only one label column.";
+    static const char* kStringErrorDatasetIsAlreadyInit = "Error: Dataset has already been initialized. Initialize another one.";
 
     // CONSTANT MAPPINGS.
     static const std::map<std::string, ColumnType> kMapColumnTypeStringToEnum = {
@@ -55,15 +57,28 @@ namespace japraq
     {
         bool should_abort = false;
 
-        // Allocate pimpl.
-        pimpl_ = std::make_shared<DecisionTreeDatasetImplementation>();
+        // Check if we already read the CSV before.
+        if (pimpl_ == nullptr)
+        {
+			// Allocate pimpl.
+			pimpl_ = std::make_shared<DecisionTreeDatasetImplementation>();
+        }
+        else
+        {
+            should_abort = true;
+            error_message = kStringErrorDatasetIsAlreadyInit;
+        }
 
         // Open the file.
-        std::ifstream input_csv(input_csv_file);
-        if (!input_csv.is_open())
+        std::ifstream input_csv;
+        if (!should_abort)
         {
-            should_abort = false;
-            error_message = kStringErrorFailedToOpenCsv;
+            input_csv.open(input_csv_file);
+            if (!input_csv.is_open())
+            {
+                should_abort = true;
+                error_message = kStringErrorFailedToOpenCsv;
+            }
         }
 
         // Read the first line in CSV, i.e. read the column names.
@@ -202,12 +217,17 @@ namespace japraq
             }
         }
 
-        pimpl_->is_init = !should_abort;
-        pimpl_->num_rows = pimpl_->table.columns[0].column_entries.size();
+        if (!should_abort)
+        {
+            pimpl_->is_init = true;
+            pimpl_->num_rows = pimpl_->table.columns[0].column_entries.size();
+            error_message = "";
+        }
+
         return !should_abort;
     }
 
-    bool DecisionTreeDataset::GetLabel(uint32_t row_index, std::string& label, uint32_t& label_id, std::string& error_message) const
+    bool DecisionTreeDataset::GetLabel(const uint32_t row_index, std::string& label, uint32_t& label_id, std::string& error_message) const
     {
         bool should_abort = false;
 
@@ -236,7 +256,7 @@ namespace japraq
         return !should_abort;
     }
 
-    bool DecisionTreeDataset::GetRow(uint32_t row_index, TableRow& table_row, std::string& error_message) const
+    bool DecisionTreeDataset::GetRow(const uint32_t row_index, TableRow& table_row, std::string& error_message) const
     {
         bool should_abort = false;
 
@@ -269,6 +289,31 @@ namespace japraq
                 row_entry.column_entry = column.column_entries[row_index];
                 row_entry.column_info = column.column_info;
             }
+        }
+
+        return !should_abort;
+    }
+
+    bool DecisionTreeDataset::GetColumn(const uint32_t column_index, TableColumn& table_column, std::string& error_message) const
+    {
+        bool should_abort = false;
+
+        // Error handling.
+        if (!pimpl_->is_init)
+        {
+            should_abort = true;
+            error_message = kStringErrorDatasetNotInit;
+        }
+        else if (column_index >= pimpl_->table.columns.size())
+        {
+            should_abort = true;
+            error_message = kStringErrorColIdxOutOfRange;
+        }
+
+        // Get the column if base checks passed.
+        if (!should_abort)
+        {
+            table_column = pimpl_->table.columns[column_index];
         }
 
         return !should_abort;
