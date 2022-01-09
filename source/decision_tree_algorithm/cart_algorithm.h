@@ -16,8 +16,25 @@ namespace japraq
     class CartAlgorighm : public IDecisionTreeAlgorithm
     {
     public:
-        bool BuildTree(const DecisionTreeDataset& dataset, DecisionTreeNode& root_node, std::string& error_message) override;
-        bool Infer(const DecisionTreeDataset& dataset, const DecisionTreeNode& root_node, const DataPoint& data_point, std::string& result, std::string& error_message) override;
+        bool BuildTree
+        (
+            const DecisionTreeDataset& dataset,
+            DecisionTreeNode& root_node,
+            std::string& error_message
+        ) override;
+
+        bool Infer
+        (
+            const DecisionTreeDataset& dataset,
+            const DecisionTreeNode& root_node,
+            const DataPoint& data_point,
+            std::string& result,
+            std::string& error_message
+        ) override;
+
+    private:
+        struct CartAlgorithmImplementation;
+        std::shared_ptr<CartAlgorithmImplementation> pimpl_;
     };
 } // namespace japraq
 

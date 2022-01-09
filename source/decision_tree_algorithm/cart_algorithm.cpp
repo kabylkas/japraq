@@ -75,7 +75,7 @@ namespace japraq
     bool CartAlgorighm::BuildTree(const DecisionTreeDataset& dataset, DecisionTreeNode& root_node, std::string& error_message)
     {
         bool ret = false;
-        std::deque<std::shared_ptr<DecisionTreeNode>> nodes_to_process;    
+        std::deque<std::shared_ptr<DecisionTreeNode>> nodes_to_process;
         nodes_to_process.push_back(std::make_shared<DecisionTreeNode>(root_node));
 
         while(!nodes_to_process.empty())
