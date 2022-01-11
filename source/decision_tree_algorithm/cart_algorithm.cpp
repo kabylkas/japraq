@@ -47,11 +47,37 @@ namespace japraq
         return (1.0 - gini);
     }
 
-    static bool Partition
+    static void Partition
     (
         const TableColumn& column,
         const ColumnEntry& pivot_entry,
         const std::vector<uint32_t>& row_indicies,
+        const std::function<bool(uint32_t, float)>& question,
+        std::vector<uint32_t>& true_indicies,
+        std::vector<uint32_t>& false_indicies
+    )
+    {
+		for (uint32_t index : row_indicies)
+		{
+			// Get the entry.
+			auto& column_entry = column.column_entries[index];
+
+			// Partition based on the question.
+			if (question(column_entry.categorical_uint_value, column_entry.numerical_value))
+			{
+				true_indicies.push_back(index);
+			}
+			else
+			{
+				false_indicies.push_back(index);
+			}
+		}
+    }
+
+    static bool BestPartition
+    (
+        const DecisionTreeDataset& dataset,
+        const std::vector<uint32_t> row_indicies,
         std::vector<uint32_t>& true_indicies,
         std::vector<uint32_t>& false_indicies,
         std::string& error_message
@@ -78,38 +104,6 @@ namespace japraq
             should_abort = true;
             error_message = kStringErrorUndefinedColumnCategory;
         }
-
-        if (!should_abort)
-        {
-            for (uint32_t index : row_indicies)
-            {
-                // Get the entry.
-                auto& column_entry = column.column_entries[index];
-
-                // Partition based on the question.
-                if (question(column_entry.categorical_uint_value, column_entry.numerical_value))
-                {
-                    true_indicies.push_back(index);
-                }
-                else
-                {
-                    false_indicies.push_back(index);
-                }
-            }
-        }
-
-        return !should_abort;
-    }
-
-    static bool BestPartition
-    (
-        const DecisionTreeDataset& dataset,
-        const std::vector<uint32_t> row_indicies,
-        std::vector<uint32_t>& true_indicies,
-        std::vector<uint32_t>& false_indicies,
-        std::string& error_message
-    )
-    {
 
     }
     // STATIC FUNCTIONS - END.
