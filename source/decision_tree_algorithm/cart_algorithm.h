@@ -13,7 +13,7 @@
 
 namespace japraq
 {
-    class CartAlgorighm : public IDecisionTreeAlgorithm
+    class CartAlgorithm : public IDecisionTreeAlgorithm
     {
     public:
         bool BuildTree

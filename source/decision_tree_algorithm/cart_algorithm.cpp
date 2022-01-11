@@ -6,16 +6,20 @@
 
 // C++ libraries.
 #include <deque>
+#include <functional>
 #include <map>
 #include <memory>
 
 // Local libraries.
 #include "decision_tree_dataset.h"
 #include "decision_tree_node.h"
-#include "question.h"
+#include "table_defines.h"
 
 namespace japraq
 {
+    // CONSTANTS.
+    static const char* kStringErrorUndefinedColumnCategory = "Error: Undefined column category detected.";
+
     // STATIC FUNCTIONS - BEGIN.
     static double CalculateGiniImpurity(const DecisionTreeDataset& dataset, std::vector<uint32_t> row_indicies)
     {
@@ -45,18 +49,56 @@ namespace japraq
 
     static bool Partition
     (
-        const DecisionTreeDataset& dataset,
+        const TableColumn& column,
+        const ColumnEntry& pivot_entry,
         const std::vector<uint32_t>& row_indicies,
-        const Question& question,
         std::vector<uint32_t>& true_indicies,
-        std::vector<uint32_t> false_indicies,
+        std::vector<uint32_t>& false_indicies,
         std::string& error_message
     )
     {
-        for (uint32_t index : row_indicies)
+        bool should_abort = false;
+
+        // Determine the condition to compare against based on the column type.
+        std::function<bool(uint32_t, float)> question;
+        if (column.column_info.column_type == ColumnType::kCategorical)
         {
-            const auto& row = dataset.GetRow(index);
+            question = [&](uint32_t categorical_uint_value, float numerical_value) {
+                return categorical_uint_value == pivot_entry.categorical_uint_value;
+            };
         }
+        else if (column.column_info.column_type == ColumnType::kNumercal)
+        {
+            question = [&](uint32_t categorical_uint_value, float numerical_value) {
+                return numerical_value >= pivot_entry.numerical_value;
+            };
+        }
+        else
+        {
+            should_abort = true;
+            error_message = kStringErrorUndefinedColumnCategory;
+        }
+
+        if (!should_abort)
+        {
+            for (uint32_t index : row_indicies)
+            {
+                // Get the entry.
+                auto& column_entry = column.column_entries[index];
+
+                // Partition based on the question.
+                if (question(column_entry.categorical_uint_value, column_entry.numerical_value))
+                {
+                    true_indicies.push_back(index);
+                }
+                else
+                {
+                    false_indicies.push_back(index);
+                }
+            }
+        }
+
+        return !should_abort;
     }
 
     static bool BestPartition
@@ -64,7 +106,7 @@ namespace japraq
         const DecisionTreeDataset& dataset,
         const std::vector<uint32_t> row_indicies,
         std::vector<uint32_t>& true_indicies,
-        std::vector<uint32_t> false_indicies,
+        std::vector<uint32_t>& false_indicies,
         std::string& error_message
     )
     {
@@ -72,7 +114,7 @@ namespace japraq
     }
     // STATIC FUNCTIONS - END.
 
-    bool CartAlgorighm::BuildTree(const DecisionTreeDataset& dataset, DecisionTreeNode& root_node, std::string& error_message)
+    bool CartAlgorithm::BuildTree(const DecisionTreeDataset& dataset, DecisionTreeNode& root_node, std::string& error_message)
     {
         bool ret = false;
         std::deque<std::shared_ptr<DecisionTreeNode>> nodes_to_process;
@@ -101,7 +143,7 @@ namespace japraq
         }
     }
 
-    bool CartAlgorighm::Infer(const DecisionTreeDataset& dataset, const DecisionTreeNode& root_node, const DataPoint& data_point, std::string& result, std::string& error_message)
+    bool CartAlgorithm::Infer(const DecisionTreeDataset& dataset, const DecisionTreeNode& root_node, const DataPoint& data_point, std::string& result, std::string& error_message)
     {
         error_message = "Error: Function not implemented.";
         return false;

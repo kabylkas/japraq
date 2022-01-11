@@ -14,12 +14,25 @@ set (ALL_HEADERS
     # DecisionTreeDataset class.
     ${SOURCE_DIR}/decision_tree_dataset/decision_tree_dataset.h
     ${SOURCE_DIR}/decision_tree_dataset/table_defines.h
+
+    # DecisionTreeAlgorithm classes.
+    ${SOURCE_DIR}/decision_tree_algorithm/decision_tree_algorithm.h
+    ${SOURCE_DIR}/decision_tree_algorithm/cart_algorithm.h
+
+    # DecisionTreeNode class.
+    ${SOURCE_DIR}/common/decision_tree_node.h
 )
 
 # Set project source.
 set (ALL_CPP
     # DecisionTreeDataset class.
     ${SOURCE_DIR}/decision_tree_dataset/decision_tree_dataset.cpp
+
+    # DecisionTreeAlgorithm classes.
+    ${SOURCE_DIR}/decision_tree_algorithm/cart_algorithm.cpp
+
+    # DecisionTreeNode class.
+    ${SOURCE_DIR}/common/decision_tree_node.h
 )
 
 # Adding target.
@@ -27,5 +40,7 @@ add_executable(japraq_tester main.cpp ${ALL_HEADERS} ${ALL_CPP})
 
 # Include directories.
 target_include_directories(japraq_tester PRIVATE
+    ${SOURCE_DIR}/common
     ${SOURCE_DIR}/decision_tree_dataset
+    ${SOURCE_DIR}/decision_tree_algorithm
 )
