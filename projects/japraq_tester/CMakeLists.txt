@@ -19,6 +19,12 @@ set (ALL_HEADERS
     ${SOURCE_DIR}/decision_tree_algorithm/decision_tree_algorithm.h
     ${SOURCE_DIR}/decision_tree_algorithm/cart_algorithm.h
 
+    # Question class.
+    ${SOURCE_DIR}/question/question.h
+    ${SOURCE_DIR}/question/question_factory.h
+    ${SOURCE_DIR}/question/categorical_question.h
+    ${SOURCE_DIR}/question/numerical_question.h
+
     # DecisionTreeNode class.
     ${SOURCE_DIR}/common/decision_tree_node.h
 )
@@ -30,6 +36,11 @@ set (ALL_CPP
 
     # DecisionTreeAlgorithm classes.
     ${SOURCE_DIR}/decision_tree_algorithm/cart_algorithm.cpp
+
+    # Question class.
+    ${SOURCE_DIR}/question/question_factory.cpp
+    ${SOURCE_DIR}/question/categorical_question.cpp
+    ${SOURCE_DIR}/question/numerical_question.cpp
 
     # DecisionTreeNode class.
     ${SOURCE_DIR}/common/decision_tree_node.h
@@ -43,4 +54,5 @@ target_include_directories(japraq_tester PRIVATE
     ${SOURCE_DIR}/common
     ${SOURCE_DIR}/decision_tree_dataset
     ${SOURCE_DIR}/decision_tree_algorithm
+    ${SOURCE_DIR}/question
 )

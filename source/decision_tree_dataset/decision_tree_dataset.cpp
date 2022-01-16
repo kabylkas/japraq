@@ -48,6 +48,9 @@ namespace japraq
         // Number of rows in the table.
         uint32_t num_rows = 0;
 
+        // Number of columns in the table.
+        uint32_t num_columns = 0;
+
         // Is label set.
         bool is_label_index_set = false;
     };
@@ -221,6 +224,7 @@ namespace japraq
         {
             pimpl_->is_init = true;
             pimpl_->num_rows = pimpl_->table.columns[0].column_entries.size();
+            pimpl_->num_columns = pimpl_->table.columns.size();
             error_message = "";
         }
 
@@ -317,5 +321,15 @@ namespace japraq
         }
 
         return !should_abort;
+    }
+
+    uint32_t DecisionTreeDataset::GetRowCount() const
+    {
+        return pimpl_->num_rows;
+    }
+
+    uint32_t DecisionTreeDataset::GetColumnCount() const
+    {
+        return pimpl_->num_columns;
     }
 } // namespace japraq

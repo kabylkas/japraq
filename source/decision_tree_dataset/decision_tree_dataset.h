@@ -24,8 +24,8 @@ namespace japraq
         bool GetLabel(const uint32_t row_index, std::string& label, uint32_t& label_id, std::string& error_message) const;
         bool GetRow(const uint32_t row_index, TableRow& table_row, std::string& error_message) const;
         bool GetColumn(const uint32_t column_index, TableColumn& table_column, std::string& error_message) const;
-        uint32_t GetRowCount();
-        uint32_t GetColumnCount();
+        uint32_t GetRowCount() const;
+        uint32_t GetColumnCount() const;
 
         // Constructor restrictions.
         DecisionTreeDataset() = default;

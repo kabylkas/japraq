@@ -14,25 +14,31 @@
 #include "decision_tree_dataset.h"
 #include "decision_tree_node.h"
 #include "table_defines.h"
+#include "question_factory.h"
 
 namespace japraq
 {
+    // TYPE DEFINITIONS.
+    using QuestionPointerList = std::vector<std::shared_ptr<IQuestion>>;
+
     // CONSTANTS.
     static const char* kStringErrorUndefinedColumnCategory = "Error: Undefined column category detected.";
 
-    // STATIC FUNCTIONS - BEGIN.
-    static double CalculateGiniImpurity(const DecisionTreeDataset& dataset, std::vector<uint32_t> row_indicies)
+    // STATIC FUNCTIONS.
+    static double CalculateGiniImpurity(const DecisionTreeDataset& dataset, const std::vector<uint32_t>& row_indicies, std::string& error_message)
     {
         // Create the histogram of labels for the given indicies.
         std::map<uint32_t, uint32_t> histogram;
-        for (uint32_t index : row_indicies)
+        for (const uint32_t index : row_indicies)
         {
             // Get label.
-            uint32_t label = dataset.GetLabel(index);
+            uint32_t label_id = 0;
+            std::string label;
+            bool is_label_retrieved = dataset.GetLabel(index, label, label_id, error_message);
 
             // Update histogram.
-            histogram[label];
-            ++histogram[label];
+            histogram[label_id];
+            ++histogram[label_id];
         }
 
         // Calculate gini.
@@ -50,9 +56,8 @@ namespace japraq
     static void Partition
     (
         const TableColumn& column,
-        const ColumnEntry& pivot_entry,
+        const std::shared_ptr<IQuestion> question,
         const std::vector<uint32_t>& row_indicies,
-        const std::function<bool(uint32_t, float)>& question,
         std::vector<uint32_t>& true_indicies,
         std::vector<uint32_t>& false_indicies
     )
@@ -63,7 +68,7 @@ namespace japraq
 			auto& column_entry = column.column_entries[index];
 
 			// Partition based on the question.
-			if (question(column_entry.categorical_uint_value, column_entry.numerical_value))
+			if (question->Evaluate(column_entry))
 			{
 				true_indicies.push_back(index);
 			}
@@ -72,6 +77,15 @@ namespace japraq
 				false_indicies.push_back(index);
 			}
 		}
+    }
+
+    static void GenerateQuestionsFromColumn
+    (
+        const TableColumn& column,
+        QuestionPointerList& all_questions
+    )
+    {
+
     }
 
     static bool BestPartition
@@ -85,29 +99,49 @@ namespace japraq
     {
         bool should_abort = false;
 
-        // Determine the condition to compare against based on the column type.
-        std::function<bool(uint32_t, float)> question;
-        if (column.column_info.column_type == ColumnType::kCategorical)
+        for (uint32_t column_index = 0;
+            !should_abort && column_index < dataset.GetColumnCount();
+            ++column_index)
         {
-            question = [&](uint32_t categorical_uint_value, float numerical_value) {
-                return categorical_uint_value == pivot_entry.categorical_uint_value;
-            };
-        }
-        else if (column.column_info.column_type == ColumnType::kNumercal)
-        {
-            question = [&](uint32_t categorical_uint_value, float numerical_value) {
-                return numerical_value >= pivot_entry.numerical_value;
-            };
-        }
-        else
-        {
-            should_abort = true;
-            error_message = kStringErrorUndefinedColumnCategory;
+            TableColumn column;
+            bool is_column_retrieved = dataset.GetColumn(column_index, column, error_message);
+
+            if (is_column_retrieved)
+            {
+                // Generate all questions.
+                QuestionPointerList all_questions;
+                GenerateQuestionsFromColumn(column, all_questions);
+
+                // Do all partitions.
+                std::vector<uint32_t> temp_true_indicies;
+                std::vector<uint32_t> temp_false_indicies;
+                for (auto question_iterator = all_questions.begin();
+                    !should_abort && question_iterator != all_questions.end();
+                    ++question_iterator)
+                {
+                    // Dereference the question.
+                    const auto& question = *question_iterator;
+
+                    // Clear the partitioned vectors.
+                    temp_true_indicies.clear();
+                    temp_false_indicies.clear();
+
+                    // Partition.
+                    Partition(column, question, row_indicies, temp_true_indicies, temp_false_indicies);
+
+                    // Calculate gini.
+                }
+            }
+            else
+            {
+                should_abort = true;
+            }
         }
 
+        return !should_abort;
     }
-    // STATIC FUNCTIONS - END.
 
+    // CLASS IMPLEMENTATION.
     bool CartAlgorithm::BuildTree(const DecisionTreeDataset& dataset, DecisionTreeNode& root_node, std::string& error_message)
     {
         bool ret = false;
