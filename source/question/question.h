@@ -7,12 +7,30 @@
 
 namespace japraq
 {
-    // Forward declartions.
-    struct ColumnEntry;
-    struct IQuestion
-    {
-        virtual bool Evaluate(const ColumnEntry& column_entry) const = 0;
-        virtual ~IQuestion() = default;
-    };
+  // Forward declarations.
+  class Attribute;
+
+  enum class QuestionOperation
+  {
+    kEquals,
+    kNotEquals,
+    kGreaterThan
+  };
+
+  class Question
+  {
+  public:
+    // Constructor for categorical question.
+    Question(const Attribute& should_be, QuestionOperation operation);
+
+    // Should be attribute must be always provided.
+    Question() = delete;
+
+    bool Ask(const DataPoint& data_point, const Attribute& attribute) const;
+
+  private:
+    struct Implementation;
+    std::shared_ptr<Implementation> pimpl_;
+  };
 } // namespace japraq
 #endif // QUESTION_H_
